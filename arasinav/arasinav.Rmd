@@ -1,7 +1,7 @@
 ---
-title: "Çalışmanızın Başlığı"
+title: "Fizikokimyasal Özelliklerinden Yola Çıkarak Beyaz Şarap Tercihlerinin Tahmini"
 author: 
-  - İsim Soyisim[^1]
+  - Fırat Kıl [18080094]
 bibliography: ../bibliography/biblio.bib
 csl: ../csl/apa-tr.csl
 header-includes:
@@ -32,32 +32,40 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 <!-- ======================================================================= -->
 <!-- ============================== NOTLAR ================================= -->
 <!-- ======================================================================= -->
-[^1]: Öğrenci Numarası, [Github Repo](https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ)
-
-# Vize Hakkında Önemli Bilgiler
-
-\colorbox{BurntOrange}{GITHUB REPO BAĞLANTINIZI BU DOSYANIN 35. SATIRINA YAZINIZ!}
-
-**Proje önerisi gönderimi, Github repo linki ile birlikte ekampus sistemine bir zip dosyası yüklenerek yapılacaktır. Sisteme zip dosyası yüklemezseniz ve Github repo linki vermezseniz ara sınav ve final sınavlarına girmemiş sayılırsınız.**
-
-**Proje klasörünüzü sıkıştırdıktan sonra (`YourStudentID.zip` dosyası) 16 Nisan 2023 23:59'a kadar *ekampus.ankara.edu.tr* adresine yüklemeniz gerekmektedir.**
-
-\colorbox{WildStrawberry}{Daha fazla bilgi için proje klasöründeki README.md dosyasını okuyunuz.}
-
-# Giriş
-Bu taslak size proje ödevinizi yazarken yardımcı olması amacıyla oluşturulmuştur. Ödevlerinizde, makalelerinizde, sunumlarınızda ve projelerinizde kullandığınız tüm bilgi kaynaklarına atıfta bulunmalısınız. Alıntı ve gönderme yapmak okuyuculara çalışmanızda kullandığınız/başvurduğunuz  kaynaklara ulaşma imkanı sağlar. **Her ne kadar kendi sözlerinizi kullanıyor olsanız da, başkalarına ait fikirleri çalışmanızda aktarıyorsanız bu fikirlerin kaynağını belgelemek zorundasınız. Aksi takdirde akademik intihal yapmış olursunuz.** Yazım konusunda @aydinonat:2007'ye başvurabilirsiniz. 
+[Github Repo](https://github.com/firatkill/arasinav)
 
 
-Proje ödevinizde yer alan başlıkların bu metinde yer alan başlıkları kesinlikle içermesi gerekmektedir (doğal olarak ilk bölüm başlığı hariç). Burada kullanılan başlıklar haricinde farklı alt başlıklar da kullanabilirsiniz. Projenizi yazarken bu dosyayı taslak olarak kullanıp içeriğini projenize uyarlayınız.
+## Giriş
+
+   Beyaz şaraplar, şarap dünyasının en zarif ve çeşitli tatlarından bazılarını sunan ferahlatıcı içeceklerdir. Beyaz şarapların üretiminde kullanılan üzümler ve üretim süreci, lezzet, koku ve dokularında önemli bir rol oynar. Ayrıca, beyaz şarapların fizikokimyasal özellikleri, renk, asitlik, alkol oranı ve tat profilleri gibi faktörler de birçok kişinin tercih ettiği belirli bir tarza sahip olmasına neden olur. Bu çalışmada, beyaz şarapların fizikokimyasal özelliklerine ve bu özelliklerin tercih edilen tat profillerine nasıl etki ettiğine dair, 12 değişkenli veri setinden yola çıkılarak, detaylı bir analiz sunulacaktır. Veri setinde bu değişkenlere ait 77 farklı gözlem bulunmaktadır.
+
+Veri setinde aşağıdaki değişkenler bulunmaktadır;
+
+ * **Sabit asidite**
+ * **Uçucu asidite:** _Normal basınçta düşük kaynama-buharlaşma sıcaklığına sahip olan, enerji metabolizmasında kullanılan propiyonik, bütirik ve sirke asidi gibi organik asitler._
+ * **Sitrik Asit**
+ * **Artık şeker:** _Fermantasyon sonucu şarap dibinde kalan doğal üzüm şekeri._
+ * **Klorür**
+ * **Serbest sülfür dioksit**
+ * **Toplam sülfür dioksit**
+ * **Yoğunluk**
+ * **pH**
+ * **Sülfat**
+ * **Alkol**
+ * **Kalite**
+ 
 
 ## Çalışmanın Amacı
-Bu bölümde yaptığınız çalışmanın amacından ve öneminden birkaç paragraf ile bahsediniz.
 
-## Literatür 
-Bu bölümde konu ile ilgili olarak okuduğunuz makaleleri referans vererek tartışınız. **Her makaleyi ayrı başlık altında tek tek özetlemeyiniz.** Literatür taramasında **en az dört** makaleye atıf yapılması ve bu makalelerden **en az ikisinin İngilizce** olması gerekmektedir.
+  Bu çalışma ile en eski içeceklerden biri olan şarabın genel karakteristikleri, üretimi, kalitesi ve üzümün hasadından şişelenip ve tüketiciye sunumuna kadar olan süreçlerde kalitesini etkileyen faktörler incelenmiştir. Bu faktörlerden yola çıkarak kullanıcılar tarafından tercih edilen tat profillerine nasıl etki ettiğine dair bir analiz sunulacaktır. 
 
+## Literatür
 
-**_Taslakta bu cümleden sonra yer alan hiçbir şey silinmemelidir._**
+  Şarap, çok eski tarihlerden beri tüketile gelmekte olan özellikle Yunan ve Roma dönemlerine damgasını vurmuş geleneksel bir içkidir. Özellikle Batı toplumlarında gastronomi ile özdeşleşmiş olan şarap her türlü meyveden üretilmesine rağmen, şarap denilince akla üzüm gelmektedir.[@csen2006csaraplarda] Günümüzde yerli ve yabancı çeşitli markalara ait çok sayıda şarap çeşidi vardır. Bunların bazıları nispeten daha ucuz bazıları da pahalıdır. Fiyat farkı maliyet kadar şarabın kalitesi ile de ilgilidir. Çok sayıda faktör şarapta kaliteyi etkilemektedir. Şaraptaki kalite kriterlerinin bilinmesi ve kalitenin korunması gastronomi alanında önemli bir husustur. [@zeliha2017csarap]
+  
+Bir zamanlar lüks bir ürün olarak görülen şarap, günümüzde giderek daha geniş bir tüketici yelpazesi tarafından beğenilmektedir. [@ozkan2017bozcaadada] Şarap endüstrisi, büyümesini desteklemek için hem şarap yapımı hem de satış süreçleri için yeni teknolojilere yatırım yapıyor. Şarap sertifikasyonu ve kalite değerlendirmesi bu bağlamda kilit unsurlardır. Sertifikasyon, (insan sağlığını korumak için) şarapların yasa dışı olarak karıştırılmasını önler ve şarap pazarı için kaliteyi garanti eder. Kalite değerlendirmesi genellikle sertifikasyon sürecinin bir parçasıdır ve şarap yapımını iyileştirmek (en etkili faktörleri belirleyerek) ve birinci sınıf markalar gibi şarapları sınıflandırmak (fiyatları belirlemek için yararlıdır) için kullanılabilir.
+
+Şarap sertifikası genellikle fizikokimyasal ve duyusal testlerle değerlendirilir [@chambery2009peptide]. Şarabı karakterize etmek için rutin olarak kullanılan fizikokimyasal laboratuvar testleri, yoğunluk, alkol veya pH değerlerinin belirlenmesini içerirken, duyusal testler esas olarak insan uzmanlara dayanır. Tadın insan duyuları arasında en az anlaşılan [@ubeda2020chemical] olduğu vurgulanmalıdır, bu nedenle şarap sınıflandırması zor bir iştir. Ayrıca, fizikokimyasal ve duyusal analiz arasındaki ilişkiler karmaşıktır ve hala tam olarak anlaşılmamıştır [@samoticha2017effects].
 
 \newpage
 # Kaynakça {#references}
