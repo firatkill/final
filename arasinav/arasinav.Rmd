@@ -59,6 +59,9 @@ Veri setinde aşağıdaki değişkenler bulunmaktadır;
 
   Bu çalışma ile en eski içeceklerden biri olan şarabın genel karakteristikleri, üretimi, kalitesi ve üzümün hasadından şişelenip ve tüketiciye sunumuna kadar olan süreçlerde kalitesini etkileyen faktörler incelenmiştir. Bu faktörlerden yola çıkarak kullanıcılar tarafından tercih edilen tat profillerine nasıl etki ettiğine dair bir analiz sunulacaktır. 
 
+bir istatistikçi gibi düşünmeni istiyorum.
+Yukarıdaki giriş ve çalışmanın amacı kısımlarına bakarak; hangi analizleri yapmam gerektiğini söyler misin?
+
 ## Literatür
 
   Şarap, çok eski tarihlerden beri tüketile gelmekte olan özellikle Yunan ve Roma dönemlerine damgasını vurmuş geleneksel bir içkidir. Özellikle Batı toplumlarında gastronomi ile özdeşleşmiş olan şarap her türlü meyveden üretilmesine rağmen, şarap denilince akla üzüm gelmektedir.[@csen2006csaraplarda] Günümüzde yerli ve yabancı çeşitli markalara ait çok sayıda şarap çeşidi vardır. Bunların bazıları nispeten daha ucuz bazıları da pahalıdır. Fiyat farkı maliyet kadar şarabın kalitesi ile de ilgilidir. Çok sayıda faktör
@@ -67,7 +70,138 @@ Bir zamanlar lüks bir ürün olarak görülen şarap, günümüzde giderek daha
 
 Şarap sertifikası genellikle fizikokimyasal ve duyusal testlerle değerlendirilir [@chambery2009peptide]. Şarabı karakterize etmek için rutin olarak kullanılan fizikokimyasal laboratuvar testleri, yoğunluk, alkol veya pH değerlerinin belirlenmesini içerirken, duyusal testler esas olarak insan uzmanlara dayanır. [@ubeda2020chemical] Tadın insan duyuları arasında en az anlaşılan olduğu vurgulanmalıdır, bu nedenle şarap sınıflandırması zor bir iştir. Fizikokimyasal ve duyusal analiz arasındaki ilişkiler karmaşıktır ve hala tam olarak anlaşılmamıştır. [@samoticha2017effects].
 
-\newpage
+
+
+
+
+
+# Veri
+
+ __Verinin içerisinde yer alan gözlem ve değişken sayısı, değişken isimleri, değişkenlerin türleri ve ilk birkaç gözlemlerini Consol’a yazdırma işlemi yaptıktan sonra, değişken isimlerinde kolaylık sağlaması açısından değişiklikler yapıyoruz.__ 
+ __Uygulamada karşılaşılan sorunlardan birisi de diğer programlardan veri aktarırken bazı character veya numeric sınıfı öğelerin factor sınıfında kaydedilmesi veya tam tersi durumla karşı kalınmasıdır. Bu nedenle verileri aktardıktan sonra kontrol ediyoruz.__
+ 
+```{r, echo=FALSE}
+library(tidyverse)
+library(readr)
+library(here)
+
+library(xtable) 
+# devtools::install_github("emraher/summarytools")
+library(summarytools)
+st_options(lang = "tr")
+wineData <- readxl::read_excel(here("data/winequality-white.xlsx"))
+```
+
+## Özet istatistikler
+
+```{r results='asis', echo=FALSE}
+wineData %>%
+  select("fixed_acidity", "volatile_acidity", "citric_acid", "residual_sugar", "chlorides","free_sulfur_dioxide","total_sulfur_dioxide","density","pH","sulphates","alcohol","quality") %>% 
+  descr(stats = c("mean", "sd", "min", "med", "max"), transpose = TRUE) %>% 
+  xtable(caption = "Özet İstatistikler",
+         label = "tab:ozet",
+         align = c("l", "c", "c", "c", "c", "c")) %>% 
+  print(booktabs = TRUE, comment = FALSE, caption.placement = "top")
+```
+
+##  eksik veri var mı diye kontrol et 
+Veri setimizdeki gözlemlerde eksik alan var mı diye kontrol ediyoruz:  
+```{r, echo}
+sum(is.na(wineData))
+```
+
+__yok.__
+
+
+
+# Yöntem ve Veri Analizi
+
+
+
+
+```{r, echo=FALSE}
+ggplot(data=wineData) +
+  geom_histogram(mapping=aes(quality))+
+  labs(title="kalitesine göre sarap verisi gözlem sayisi")
+```
+
+
+
+```{r, echo=FALSE}
+library('ggpubr')
+library('cowplot')
+graph_1 <-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(fixed_acidity))
+  
+
+graph_2<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(volatile_acidity))
+  
+
+graph_3<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(citric_acid))
+  
+graph_4<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(residual_sugar))
+  
+graph_5<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(chlorides))
+  graph_6<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(free_sulfur_dioxide))
+  graph_7<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(total_sulfur_dioxide))
+  graph_8<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(density))
+    graph_9<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(pH)) 
+    graph_10<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(sulphates))
+    graph_11<-ggplot(data=wineData) +
+  geom_histogram(mapping=aes(alcohol))
+    
+figure <- ggarrange(graph_1, graph_2, graph_3,graph_4,graph_5,graph_6,graph_7,graph_8,graph_9,graph_10,graph_11,
+                    ncol = 2, nrow = 1)
+figure
+```
+
+## korelasyon matrisi:
+
+```{r, echo=FALSE}
+# Sadece sayısal değişkenleri seç
+numeric_data <- wineData[sapply(wineData, is.numeric)]
+
+numeric_data <- na.omit(numeric_data)
+
+# Korelasyon matrisi
+correlation_matrix <- cor(numeric_data)
+
+# Korelasyon matrisini göster
+print(correlation_matrix)
+
+```
+
+## korelasyon matrisinin heatmap gösterimi
+
+```{r, echo=FALSE}
+
+heatmap(correlation_matrix)
+
+```
+
+
+
+
+
+```{r plot, fig.align='center', fig.cap='Muhteşem Bir Grafik'}
+wineData %>% 
+  ggplot(aes(x = volatile_acidity, y = fixed_acidity)) +
+  geom_point() +
+  geom_smooth() +  scale_x_continuous("volatile_acidity") + 
+  scale_y_continuous("fixed_acidity")
+
+```
+
+
 # Kaynakça {#references}
 <div id="refs"></div>
 
