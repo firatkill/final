@@ -77,9 +77,36 @@ Bir zamanlar lüks bir ürün olarak görülen şarap, günümüzde giderek daha
 
 # Veri
 
- __Verinin içerisinde yer alan gözlem ve değişken sayısı, değişken isimleri, değişkenlerin türleri ve ilk birkaç gözlemlerini Consol’a yazdırma işlemi yaptıktan sonra, değişken isimlerinde kolaylık sağlaması açısından değişiklikler yapıyoruz.__ 
- __Uygulamada karşılaşılan sorunlardan birisi de diğer programlardan veri aktarırken bazı character veya numeric sınıfı öğelerin factor sınıfında kaydedilmesi veya tam tersi durumla karşı kalınmasıdır. Bu nedenle verileri aktardıktan sonra kontrol ediyoruz.__
+Bu veri analizi projesi, beyaz şarapların fiziksel ve kimyasal özelliklerini incelemeyi amaçlamaktadır.Veri setindeki her bir örnek, farklı beyaz şarapların özelliklerini içermektedir.
+
+Veri seti toplamda 76 gözlemden oluşmaktadır. İncelenen özellikler arasında sabit asidite, uçucu asidite, sitrik asit, artık (kalıntı) şeker, klorür, serbest sülfür dioksit, toplam sülfür dioksit, yoğunluk, pH, sülfat, alkol oranı ve kalite bulunmaktadır.
+
+Bu veri analizi projesinde, beyaz şarapların kalite değerini etkileyen faktörleri incelemeyi planlıyoruz. İlk adımda, değişkenler arasındaki ilişkileri ve önemli faktörleri belirlemek için grafikler ve tablolar hazırlayacağız. Ardından, istatistiksel testler kullanarak hipotezlerimizi test edeceğiz ve sonuçları yorumlayacağız.
+
+Bu projenin amacı, beyaz şarapların kalitesini etkileyen faktörleri belirleyerek şarap üreticilerine ve tüketicilere faydalı bilgiler sunmaktır. Analiz süreci boyunca istatistiksel yöntemler ve görselleştirmeler kullanılacak ve elde edilen sonuçlar detaylı bir şekilde açıklanacaktır.
+
+Veri setinin genel özellikleri (Tablo \ref{tab:ozet})
+
+Kalite (Quality): Veri setindeki beyaz şarapların kalite değeri ortalama 5.95 olarak hesaplanmıştır. Kalite değerleri minimum 4.0, maksimum 8.0 aralığında değişmektedir. Standart sapma ise 0.83 olarak bulunmuştur.
+
+Alkol Oranı (Alcohol): Beyaz şarapların alkol oranı ortalama 10.19 olarak hesaplanmıştır. Minimum alkol oranı 8.60, maksimum alkol oranı ise 14.00'dir. Standart sapma 1.05 olarak belirlenmiştir.
+
+Asidlik (Acidity): Veri setindeki sabit asitlik (fixed acidity) değeri ortalama 6.95 olarak bulunmuştur. Minimum sabit asitlik değeri 5.80, maksimum değer ise 8.60'dır. Uçucu asitlik (volatile acidity) ortalama 0.28, minimum değer 0.12, maksimum değer ise 0.67'dir.
+
+Şeker (Sugar): Beyaz şaraplardaki kalıntı şeker (residual sugar) ortalama 4.99 olarak hesaplanmıştır. Minimum değer 0.90, maksimum değer ise 20.70'dir.
+
+Serbest Sülfür Dioksit (Free Sulfur Dioxide): Beyaz şarapların serbest sülfür dioksit değeri ortalama 33.31 olarak hesaplanmıştır. Minimum değer 7.00, maksimum değer ise 81.00'dir.
+
+Toplam Sülfür Dioksit (Total Sulfur Dioxide): Veri setindeki beyaz şarapların toplam sülfür dioksit değeri ortalama 138.07 olarak bulunmuştur. Minimum değer 47.00, maksimum değer ise 245.00'dir.
+
+pH: Beyaz şarapların pH değeri ortalama 3.22 olarak hesaplanmıştır. Minimum pH değeri 2.95, maksimum değer ise 3.69'dur.
+
+Sülfatlar (Sulphates): Veri setindeki beyaz şarapların sülfat değeri ortalama 0.47 olarak bulunmuştur. Minimum değer 0.28, maksimum değer ise 0.71'dir.
+
+Yoğunluk (Density): Beyaz şarapların yoğunluğu ortalama 0.99 olarak hesaplanmıştır. Minimum yoğunluk değeri 0.99, maksimum değer ise 1.00'dir.
  
+Bu genel özellikler, veri setindeki beyaz şarapların fiziksel ve kimyasal bileşenlerini yansıtmaktadır. Bu özellikler üzerinde yapılan analizler, beyaz şarapların kimyasal içeriklerinin,  kalite değeri üzerindeki etkilerini anlamamıza yardımcı olabilir. Örneğin; alkol oranı, sitrik asit miktarı gibi faktörlerin kalite üzerinde önemli bir rol oynayabileceği düşünülebilir.
+
 ```{r, echo=FALSE}
 library(tidyverse)
 library(readr)
@@ -91,7 +118,15 @@ library(summarytools)
 st_options(lang = "tr")
 wineData <- readxl::read_excel(here("data/winequality-white.xlsx"))
 ```
-
+complete cases:
+```{r, echo=FALSE}
+complete.cases(wineData)
+na.omit(wineData)
+```
+names:
+```{r, echo=FALSE}
+names(wineData)
+```
 ## Özet istatistikler
 
 ```{r results='asis', echo=FALSE}
@@ -104,19 +139,22 @@ wineData %>%
   print(booktabs = TRUE, comment = FALSE, caption.placement = "top")
 ```
 
-##  eksik veri var mı diye kontrol et 
+##  Eksik Veri Kontrolü
 Veri setimizdeki gözlemlerde eksik alan var mı diye kontrol ediyoruz:  
 ```{r, echo}
 sum(is.na(wineData))
 ```
 
-__yok.__
+Görüldüğü üzere veri setimizde eksik veri yok.
 
 
 
 # Yöntem ve Veri Analizi
 
+Bu analizimizde bazı soruların cevaplarını araştıracağız. Bunlar;
 
+* *1.* Beyaz şarabın kalitesi ile hangi kimyasallar arasında pozitif bir korelasyon var?
+* *2.* Kalite ile arasında korelasyon bulunan kimyasallar ile kalite arasında nasıl bir ilişki var?
 
 
 ```{r, echo=FALSE}
@@ -130,6 +168,7 @@ ggplot(data=wineData) +
 ```{r, echo=FALSE}
 library('ggpubr')
 library('cowplot')
+
 graph_1 <-ggplot(data=wineData) +
   geom_histogram(mapping=aes(fixed_acidity))
   
@@ -161,6 +200,7 @@ graph_5<-ggplot(data=wineData) +
     
 figure <- ggarrange(graph_1, graph_2, graph_3,graph_4,graph_5,graph_6,graph_7,graph_8,graph_9,graph_10,graph_11,
                     ncol = 2, nrow = 1)
+
 figure
 ```
 
@@ -180,26 +220,79 @@ print(correlation_matrix)
 
 ```
 
-## korelasyon matrisinin heatmap gösterimi
+## korelasyon matrisinin gösterimi
+
+```{r, echo=FALSE}
+library('corrplot')
+
+correlation_matrix <- cor(wineData)
+corrplot(correlation_matrix, method = "circle",color='black')
+
+```
+
+__alkol ve kalite arasında pozitif bir korelasyon var gibi görünüyor.__
+__sitrik asit ve kalite arasında pozitif bir korelasyon var gibi görünüyor.__
+
+
+
+
+
+## Değişken Kontrolleri
+
+__Bir nokta dağılım grafiği ile alkol-kalite ilişkisini inceleyelim.__
+
+
+```{r, echo=FALSE}
+alkol_kalite <- wineData[, c("alcohol", "quality")]
+ggplot(alkol_kalite, aes(y = alcohol, x = quality)) +
+  geom_point(color = "blue") +
+  labs(y = "Alkol Oranı", x = "Kalite", title = "Alkol - Kalite İlişkisi")
+
+```
+
+
+__Alkol ve kalite arasında dikkate değer bir bağlantı yok gibi görünüyor. Kalite, alkol oranına çoğunlukla kayıtsız kalmıştır.__
+
+
+__Şimdi de Sitrik asit ve kalite ilişkisine göz atalım;__
+
+
+```{r, echo=FALSE}
+alkol_kalite <- wineData[, c("citric_acid", "quality")]
+ggplot(alkol_kalite, aes(y = citric_acid, x = quality)) +
+  geom_point(color = "blue") +
+  labs(y = "Sitrik Asit Oranı", x = "Kalite", title = "Sitrik asit - Kalite İlişkisi")
+
+```
+
+__Sitrik asit ve kalite arasında bir ilişki var gibi görünüyor. Görüldüğü üzere sitrik asit miktarı arttıkça kalite de aynı şekilde artmıştır. Öyleyse hipotezimizi Pearson korelasyon analizi ile test edelim.__
+
 
 ```{r, echo=FALSE}
 
-heatmap(correlation_matrix)
+cor_test <- cor.test(wineData$citric_acid, wineData$quality)
+cor_test
 
 ```
 
+__Analiz sonucuna göre, sitrik asit (citric_acid) ve kalite (quality) arasında istatistiksel olarak anlamlı bir ilişki olduğu görülmektedir. Elde edilen Pearson korelasyon katsayısı 0.2669549'dur. Bu değer, sitrik asit ile kalite arasında pozitif bir korelasyon olduğunu göstermektedir.__
+
+__Ayrıca, p değeri (p-value) 0.01974 olarak hesaplanmıştır. Bu değer, sitrik asit ve kalite arasındaki ilişkinin tesadüfi olmadığını ve istatistiksel olarak anlamlı olduğunu göstermektedir. Dolayısıyla, sitrik asit miktarının beyaz şarap kalitesi üzerinde etkisi olduğu söylenebilir.__
+
+__İlave olarak, %95 güven aralığına bakarak sitrik asit ve kalite arasındaki korelasyonun aralığını belirleyebiliriz. Güven aralığı, 0.04415704 ile 0.46445647 arasında olup, bu da sitrik asit ve kalite arasındaki korelasyonun makul bir aralıkta olduğunu gösterir.__
 
 
+# Sonuç
 
+Bu çalışmada, beyaz şarapların fizikokimyasal özelliklerinin, özellikle alkol oranı ve sitrik asit miktarının kalite üzerindeki etkisini inceledik. Veri setindeki 76 beyaz şarap örneğini kullanarak çeşitli istatistiksel analizler gerçekleştirdik.
 
-```{r plot, fig.align='center', fig.cap='Muhteşem Bir Grafik'}
-wineData %>% 
-  ggplot(aes(x = volatile_acidity, y = fixed_acidity)) +
-  geom_point() +
-  geom_smooth() +  scale_x_continuous("volatile_acidity") + 
-  scale_y_continuous("fixed_acidity")
+Analiz sonuçlarına göre, alkol oranı ile kalite arasında belirgin bir ilişki gözlenmedi. Ancak, sitrik asit miktarı ile kalite arasında pozitif bir korelasyon olduğu görüldü. Sitrik asit miktarı arttıkça, beyaz şarapların kalitesi de artış gösterdi. Bu durum, sitrik asidin beyaz şarapların tat profilini olumlu yönde etkilediğini göstermektedir.
 
-```
+Özellikle sitrik asidin kalite üzerindeki etkisi istatistiksel olarak anlamlı bulundu. Pearson korelasyon analizi sonucunda sitrik asit ve kalite arasında pozitif bir ilişki olduğu ortaya çıktı. Ayrıca, p değeri sitrik asit ve kalite arasındaki ilişkinin tesadüfi olmadığını gösterdi. Güven aralığı da sitrik asit ve kalite arasındaki korelasyonun makul bir aralıkta olduğunu destekledi.
+
+Sonuç olarak, beyaz şarapların kalitesini etkileyen faktörler arasında sitrik asidin önemli bir rol oynadığı söylenebilir. Şarap üreticileri, sitrik asit miktarını kontrol ederek daha kaliteli ürünler elde etme yolunda adımlar atabilirler. Tüketiciler ise sitrik asit miktarının belirli bir tat profiline sahip beyaz şarapları tercih etmelerine yardımcı olacak bilgilere sahip olabilirler.
+
+Bu çalışma, beyaz şarap üretimi ve kalite analizi konusunda daha kapsamlı araştırmalara temel oluşturabilir. Sitrik asit miktarının yanı sıra diğer fizikokimyasal özelliklerin kalite üzerindeki etkisi de incelenebilir. Ayrıca, farklı şarap türlerinin fizikokimyasal özellikleri ve kalite değerlendirmeleri üzerine karşılaştırmalı çalışmalar yapılabilir.
 
 
 # Kaynakça {#references}
